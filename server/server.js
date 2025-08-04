@@ -12,11 +12,9 @@ app.use(express.json());
 app.use(cors());
 
 // API Routes
-app.get('/', (req, res) => res.send("API Working"));
+app.get('/', (req, res) => res.send("API Working Successfully!"));
 
 
 
 // Start Server
 app.listen(PORT, () => console.log(`Server Running on port ${PORT}`));
-
-
