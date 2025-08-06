@@ -9,11 +9,11 @@ const clerkWebhooks = async (req, res) => {
     try {
 
 
-        const whooks = new Webhook(process.env.CLERK_WEBHOOKS_SECRE)
+        const whooks = new Webhook(process.env.CLERK_WEBHOOKS_SECRET)
         await whooks.verify(JSON.stringify(req.body), {
             "svix-id": req.headers["svix-id"],
             "svix-timestamp": req.headers["svix-timestamp"],
-            "svix-singnature": req.headers["svix-signature"]
+            "svix-signature": req.headers["svix-signature"]
         })
         const { data, type } = req.body
 
@@ -22,7 +22,7 @@ const clerkWebhooks = async (req, res) => {
 
                 const userData = {
                     clerkId: data.id,
-                    email: data.email_addresses[0].email_addresses,
+                    email: data.email_addresses[0].email_address,
                     firstName: data.first_name,
                     lastName: data.last_name,
                     photo: data.image_url
@@ -42,14 +42,12 @@ const clerkWebhooks = async (req, res) => {
 
                 await userModel.findOneAndUpdate({clerkId:data.id},userData)
                 res.json({})
-
                 break;
             }
 
             case "user.deleted": {
-                    await userModel.findOneAndDelete({clerkId:data.id})
-                    res.json({})
-
+                await userModel.findOneAndDelete({clerkId:data.id})
+                res.json({})
                 break;
             }
 
@@ -64,4 +62,4 @@ const clerkWebhooks = async (req, res) => {
     }
 }
 
-export {clerkWebhooks}
+export  {clerkWebhooks};
